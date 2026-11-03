@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>在招岗位 · 内推</title>
+<style>
+  :root{
+    --bg:#faf8f5; --card:#fff; --ink:#1b1a18; --muted:#6d675f; --faint:#9a938a;
+    --line:#e9e4dc; --accent:#b8472a; --accent-soft:#fbf0eb;
+    --cap:#b8472a; --cap-bg:#fbf0eb;
+    --tech:#2f6b8f; --tech-bg:#ecf3f7;
+    --biz:#59794a; --biz-bg:#eff4ec;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{
+    background:var(--bg); color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+    -webkit-font-smoothing:antialiased; line-height:1.6;
+  }
+  .wrap{max-width:960px;margin:0 auto;padding:0 18px calc(72px + env(safe-area-inset-bottom))}
+
+  /* 头部 */
+  header{padding:34px 0 18px}
+  .kicker{font-size:12px;letter-spacing:.18em;color:var(--accent);font-weight:600;margin-bottom:14px}
+  h1{font-size:30px;line-height:1.28;margin:0 0 14px;font-weight:700;letter-spacing:-.01em}
+  h1 em{font-style:normal;color:var(--accent)}
+  .lede{font-size:15px;color:var(--muted);max-width:640px;margin:0}
+  .notice{
+    margin-top:16px;padding:11px 14px;border-radius:10px;background:#fff;
+    border:1px solid var(--line);font-size:13.5px;color:var(--muted);
+  }
+  .notice b{color:var(--ink)}
+
+  /* 搜索 + 分类 */
+  .bar{position:sticky;top:0;z-index:20;background:rgba(250,248,245,.94);
+    backdrop-filter:saturate(180%) blur(10px);padding:14px 0 10px;border-bottom:1px solid var(--line)}
+  .searchwrap{position:relative}
+  .searchwrap svg{position:absolute;left:14px;top:50%;transform:translateY(-50%);opacity:.4}
+  #q{
+    width:100%;padding:13px 44px 13px 42px;border:1px solid var(--line);border-radius:11px;
+    background:#fff;font-size:15px;font-family:inherit;color:var(--ink);outline:none;
+  }
+  #q:focus{border-color:#d9cdbe;box-shadow:0 0 0 3px rgba(184,71,42,.07)}
+  #clear{position:absolute;right:8px;top:50%;transform:translateY(-50%);border:0;background:none;
+    color:var(--faint);font-size:20px;cursor:pointer;padding:4px 8px;display:none}
+  .tabs{display:flex;gap:8px;margin-top:12px;overflow-x:auto;-webkit-overflow-scrolling:touch;padding-bottom:2px}
+  .tabs::-webkit-scrollbar{display:none}
+  .tab{
+    flex:0 0 auto;border:1px solid var(--line);background:#fff;color:var(--muted);
+    padding:7px 14px;border-radius:999px;font-size:13.5px;font-family:inherit;cursor:pointer;
+    transition:.15s;white-space:nowrap;
+  }
+  .tab:hover{border-color:#d9cdbe}
+  .tab.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+  .tab .n{opacity:.55;margin-left:5px;font-variant-numeric:tabular-nums}
+
+  .meta{margin:16px 0 14px;font-size:13px;color:var(--faint)}
+  .meta b{color:var(--ink);font-weight:600}
+
+  /* 卡片 */
+  .grid{display:grid;gap:14px;grid-template-columns:1fr}
+  @media(min-width:720px){.grid{grid-template-columns:1fr 1fr}}
+  .card{
+    background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px 20px 16px;
+    display:flex;flex-direction:column;transition:.18s;
+  }
+  .card:hover{border-color:#ded5c8;box-shadow:0 3px 14px rgba(27,26,24,.05)}
+  .cardtop{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:4px}
+  .no{font-size:12px;color:var(--faint);font-variant-numeric:tabular-nums;letter-spacing:.06em;padding-top:3px}
+  .cat{font-size:11.5px;padding:3px 9px;border-radius:6px;font-weight:600;white-space:nowrap}
+  .cat.capital{color:var(--cap);background:var(--cap-bg)}
+  .cat.tech{color:var(--tech);background:var(--tech-bg)}
+  .cat.biz{color:var(--biz);background:var(--biz-bg)}
+  .hook{font-size:12px;color:var(--accent);font-weight:600;letter-spacing:.04em;margin-bottom:5px}
+  .card h3{font-size:18.5px;margin:0 0 3px;font-weight:650;letter-spacing:-.01em}
+  .org{font-size:13px;color:var(--muted);margin-bottom:12px}
+  .org .lock{color:var(--faint)}
+  .intro{font-size:13px;color:#3d3a35;background:#f7f4ee;border-radius:8px;padding:9px 11px;margin-bottom:11px;line-height:1.65}
+  .intro .il{color:var(--faint);margin-right:7px;font-size:11.5px;letter-spacing:.06em}
+  .why{font-size:14px;color:#3d3a35;margin:0 0 12px;padding-left:11px;border-left:2px solid var(--accent-soft)}
+  ul.reqs{list-style:none;margin:0 0 14px;padding:0;font-size:13.5px;color:#403c36}
+  ul.reqs li{position:relative;padding-left:15px;margin-bottom:5px}
+  ul.reqs li:before{content:"";position:absolute;left:3px;top:9px;width:4px;height:4px;border-radius:50%;background:#c9c0b3}
+  .tags{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px}
+  .tag{font-size:11.5px;color:var(--muted);background:#f5f1ea;padding:3px 8px;border-radius:5px}
+  .foot{margin-top:auto;display:flex;align-items:center;justify-content:space-between;gap:10px;
+    padding-top:13px;border-top:1px solid var(--line)}
+  .state{font-size:12px;color:var(--faint)}
+  .state.live{color:#3f7a4f}
+  .state.live:before{content:"●";margin-right:5px;font-size:9px;vertical-align:2px}
+  .state.waiting:before{content:"○";margin-right:5px;font-size:9px;vertical-align:2px}
+  button.act{
+    border:1px solid var(--ink);background:var(--ink);color:#fff;font-size:13px;font-family:inherit;
+    padding:7px 14px;border-radius:8px;cursor:pointer;transition:.15s;white-space:nowrap;
+  }
+  button.act:hover{opacity:.82}
+  button.act.done{background:#3f7a4f;border-color:#3f7a4f}
+
+  .empty{padding:52px 22px;text-align:center;color:var(--faint);font-size:14px;
+    border:1px dashed var(--line);border-radius:14px;background:#fdfcfa}
+  .empty b{display:block;color:var(--ink);font-size:15px;margin-bottom:6px;font-weight:600}
+  .inline-note{margin:0 0 14px;padding:11px 14px;border-radius:9px;background:#fff;border:1px solid var(--line);
+    font-size:13px;color:var(--muted)}
+  mark{background:#ffe9a8;color:inherit;padding:0 1px;border-radius:2px}
+
+  /* 使用说明 */
+  .how{margin-top:52px;padding-top:34px;border-top:1px solid var(--line)}
+  .how h2{font-size:16px;margin:0 0 18px;font-weight:650}
+  .steps{display:grid;gap:16px;grid-template-columns:1fr}
+  @media(min-width:720px){.steps{grid-template-columns:repeat(3,1fr)}}
+  .step{}
+  .step .sn{font-size:12px;color:var(--accent);font-weight:700;letter-spacing:.1em;margin-bottom:6px}
+  .step p{font-size:13.5px;color:var(--muted);margin:0}
+
+  .contact{margin-top:34px;padding:22px;border-radius:14px;background:var(--ink);color:#fff}
+  .contact h3{margin:0 0 6px;font-size:16px;font-weight:650}
+  .contact p{margin:0 0 14px;font-size:13.5px;color:#c8c4be}
+  .cbtn{display:inline-flex;align-items:center;gap:8px;border:1px solid rgba(255,255,255,.28);
+    background:rgba(255,255,255,.08);color:#fff;font-size:13.5px;font-family:inherit;
+    padding:9px 16px;border-radius:9px;cursor:pointer}
+  .cbtn:hover{background:rgba(255,255,255,.16)}
+
+  footer{margin-top:34px;font-size:12px;color:var(--faint);line-height:1.75}
+  footer p{margin:0 0 4px}
+  .toast{position:fixed;left:50%;bottom:34px;transform:translate(-50%,14px);background:var(--ink);color:#fff;
+    font-size:13.5px;padding:10px 18px;border-radius:9px;opacity:0;pointer-events:none;transition:.22s;z-index:50}
+  .toast.on{opacity:1;transform:translate(-50%,0)}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="kicker">在招岗位 · 内推</div>
+    <h1>这里只放<em>正在推进</em>的岗位，<br>机构名不挂在墙上。</h1>
+    <p class="lede">我是猎头。这些岗位都是我在跑的，先把岗位说清楚，你判断合不合适——对上了我再告诉你是谁。</p>
+    <div class="notice">
+      <b>机构名一律不公开。</b>很多机构还没对外说自己在招，说了对谁都不好。所以每张卡只写到「什么类型的机构、什么赛道、要什么人」这一层。
+    </div>
+  </header>
+
+  <div class="bar">
+    <div class="searchwrap">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="7" cy="7" r="5" stroke="#1b1a18" stroke-width="1.6"/><path d="M11 11l3.2 3.2" stroke="#1b1a18" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input id="q" type="search" placeholder="搜岗位、赛道、关键词：IR / 投资 / 英文 / AI" autocomplete="off">
+      <button id="clear" aria-label="清空">×</button>
+    </div>
+    <div class="tabs" id="tabs"></div>
+  </div>
+
+  <div class="meta" id="meta"></div>
+  <div id="notice"></div>
+  <div class="grid" id="grid"></div>
+
+  <section class="how">
+    <h2>怎么用这个页面</h2>
+    <div class="steps">
+      <div class="step"><div class="sn">01</div><p>看到对得上的岗位，点「我想了解」，会自动复制一句开场白。</p></div>
+      <div class="step"><div class="sn">02</div><p>贴给我，简单说你的背景和现在看什么。我会直接告诉你合不合适、差在哪。</p></div>
+      <div class="step"><div class="sn">03</div><p>合适的话我告诉你是哪家，帮你把简历递到能拍板的人手上，不群发。</p></div>
+    </div>
+  </section>
+
+  <div class="contact">
+    <h3>没有对得上的，也可以来找我</h3>
+    <p>说说你在做什么、想看什么方向。我手上不公开的岗位比这里多，有些还在确认画像。</p>
+    <button class="cbtn" id="copywx">复制微信号 18616247582</button>
+  </div>
+
+  <footer>
+    <p>岗位信息由我本人核实后录入；机构名与联系方式不在页面上展示，一律人工对接。</p>
+    <p>页面上没有的岗位，不代表没有——只是还没到可以公开说的阶段。</p>
+  </footer>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const JOBS = [
+  {
+    no:"01", cats:["capital"], mark:"资本市场",
+    hook:"紧急 · 靠谱的需求",
+    title:"投资者关系（IR）", org:"投资机构",
+    why:"团队正在补强 IR，需求明确、推进意愿强。这个岗位不是做基础材料执行，是要真正参与基金与投资人的沟通。",
+    reqs:[
+      "至少 5 年以上机构 IR 经验",
+      "有基金 IR、募资或相关投资人沟通经验",
+      "能独立推进事项，不是等人派活",
+      "表达清晰、执行力强"
+    ],
+    tags:["IR","5年以上","募资","投资人沟通"],
+    state:"live", stateNote:"在推进 · 需求明确"
+  },
+  {
+    no:"02", cats:["capital"], mark:"资本市场",
+    hook:"产业投资 · 已出手多家 AI 项目",
+    title:"投资人（主动 sourcing）", org:"美元 · 双币基金",
+    why:"这家机构一直在出手，以产业投资为主，已经投过多个 AI 项目。现在要的不是「等项目送上门」的人，是能自己把机会找出来、形成判断、再推下去的人。",
+    reqs:[
+      "有美元／双币基金背景",
+      "有科技产业经历，或理工科底子",
+      "对 AI 如何改变项目发现方式有真实兴趣",
+      "能主动 sourcing，不只是执行 pass"
+    ],
+    tags:["VC","sourcing","AI","产业投资","美元基金","理工科"],
+    state:"live", stateNote:"在推进"
+  },
+  {
+    no:"03", cats:["capital"], mark:"资本市场",
+    hook:"Global 中后期基金 · 美元 IR",
+    title:"投资者关系（美元基金）", org:"Global 中后期基金",
+    why:"一家 global 的中后期基金在找美元 IR。这个岗位要能把投行的严谨和基金的视角结合起来，长期做美元投资人与 LP 关系。",
+    reqs:[
+      "必须有美元基金 IR 经验，3 年左右",
+      "有投行及美元基金相关经历",
+      "英文沟通能力好",
+      "能独立承担投资人沟通与项目推进"
+    ],
+    tags:["IR","美元基金","3年左右","英文","投行","global"],
+    state:"live", stateNote:"在推进 · 定向沟通"
+  },
+  {
+    no:"04", cats:["biz"], mark:"职能",
+    hook:"算力 · 硬科技 · 即将上市",
+    title:"销售负责人", org:"硬科技企业（即将上市）",
+    why:"这个岗位要真的搭销售体系、带团队把复杂项目推到结果，不是只完成个人指标。公司即将上市，正需要有人把销售这件事真正建起来。",
+    reqs:[
+      "懂算力、硬科技，有科技产业客户经验",
+      "做过团队管理",
+      "有关键客户突破的经历"
+    ],
+    tags:["销售负责人","算力","硬科技","即将上市","团队管理"],
+    state:"waiting", stateNote:"画像确认中 · 产品与业绩目标待定"
+  },
+  {
+    no:"05", cats:["capital","tech"], mark:"资本市场",
+    hook:"长期人才池 · 多家机构在看",
+    title:"技术／产品背景 → 投资", org:"头部投资机构与产业资本（多家）",
+    why:"这不是某一个岗位，是我在替几家机构长期看的一类人：做过技术或产品，想往投资走。不要求你已经是投资人。",
+    reqs:[
+      "有理工科训练，真正做过技术研发或产品",
+      "能把技术理解翻译成对公司、产品、行业机会的判断",
+      "对产业和商业有持续兴趣"
+    ],
+    tags:["技术转投资","产业资本","理工科","人才池"],
+    state:"waiting", stateNote:"人才池 · 具体 HC 待确认",
+    note:"没有哪家机构承诺了确定 HC。我是先建联，等岗位开了第一个找你。"
+  },
+  {
+    no:"06", cats:["capital"], mark:"资本市场",
+    hook:"生成式 AI · IR",
+    title:"投资者关系（IR）", org:"生成式 AI 公司",
+    why:"AI 赛道，节奏快。这个岗位更适合职业阶段还比较早期、但英文和对产品的理解都在线的人。比起一份标准 IR 简历，更想知道你为什么看好这个方向。",
+    reqs:[
+      "英文沟通能力好",
+      "对这个赛道有真实了解，也真的感兴趣",
+      "关注 2C 与 Agent 赛道，有自己的看法",
+      "能把复杂业务讲清楚"
+    ],
+    tags:["IR","生成式AI","2C","Agent","英文","早期"],
+    state:"live", stateNote:"在推进"
+  },
+  {
+    no:"07", cats:["capital"], mark:"资本市场",
+    hook:"国际化平台 · 企业发展",
+    title:"企业发展 / 战略投资", org:"大型国际化平台",
+    why:"平台型公司，业务跨区域。这个岗位要看增长、推合作或交易，不只是做内部战略。",
+    reqs:[
+      "对 AI、具身智能、科技赛道有经验",
+      "较强的商业判断和项目推进能力",
+      "做过投行、投资或企业发展",
+      "英文口语能承担高频工作沟通",
+      "适应跨区域协作"
+    ],
+    tags:["企业发展","战略投资","AI","具身智能","英文","跨区域"],
+    state:"live", stateNote:"在推进"
+  },
+  {
+    no:"08", cats:["biz"], mark:"职能",
+    hook:"投资机构 HR · 模块要全",
+    title:"HR（投资机构）", org:"投资机构",
+    why:"机构要尽快补强 HR 团队。这个岗位希望覆盖的模块尽可能全，不是只做招聘那一块。",
+    reqs:[
+      "能覆盖尽可能多的 HR 模块，不只招聘",
+      "熟悉投资人才市场",
+      "能独立找人，不只是接需求、发 JD",
+      "能把招聘流程推进到底"
+    ],
+    tags:["HR","多模块","投资机构","招聘"],
+    state:"live", stateNote:"在推进 · 上海相关经验更匹配"
+  },
+  {
+    no:"09", cats:["biz"], mark:"职能",
+    hook:"企业 HR / 猎头转甲方",
+    title:"HR（企业 HR / 猎头转内部）", org:"团队正在建 HR 职能",
+    why:"这个团队愿意同时看企业 HR 和猎头背景的人。对想从乙方转到甲方做招聘的同学，是个可以聊的口子。",
+    reqs:[
+      "工作 3 年左右，年轻、节奏跟得上",
+      "对某个垂直赛道有强了解",
+      "找人能力强，沟通判断好",
+      "能把招聘流程推进到底"
+    ],
+    tags:["HR","3年","垂直赛道","猎头转甲方"],
+    state:"live", stateNote:"在推进"
+  }
+  ,
+    {
+    no:"10", cats:["tech"], mark:"技术",
+    hook:"深圳 · 消费级智能硬件 · 着急要人",
+    title:"硬件技术岗（方向待确认）", org:"消费级智能硬件公司（面向欧美市场）",
+    intro:"待补：公司规模与行业位置（品类排名 / 出货量 / 营收量级 / 融资或上市状态）",
+    why:"总部在深圳，产品主要卖欧美。客户那边的总监在催人，先看到合适的人，再谈具体怎么包装。",
+    reqs:[
+      "最好是这几家的背景：库犸（Mammotion）、拓竹（Bambu Lab）等 maker 类公司",
+      "或者 CNC／桌面级设备厂商出身，也合适",
+      "有消费级智能硬件、面向欧美市场的产品经验",
+      "具体技术方向与级别待确认，可以先聊背景"
+    ],
+    tags:["深圳","消费级硬件","欧美市场","库犸","拓竹","CNC","maker"],
+    state:"live", stateNote:"紧急 · 优先看人",
+    note:"这条是刚进来的需求，技术方向和级别我还在跟客户确认，确认后补在这里。先聊背景，合适我直接推过去。"
+  },
+  {
+    no:"11", cats:["biz"], mark:"职能",
+    hook:"头部数据公司 · 要基模圈做生态和销售的人",
+    title:"销售 / 生态（职级待确认）", org:"头部数据公司",
+    intro:"待补：公司规模、产品线与主要客户（你只说了「头部数据公司」）",
+    why:"这家公司在数据领域是头部。现在要找的人，来自基模公司——就是给大模型做生态、跑销售的那批人。",
+    reqs:[
+      "在基模公司做过生态或销售：Seed（字节）、Qwen（阿里）、Kimi（月之暗面）、智谱、MiniMax 等",
+      "懂大模型公司的生态怎么搭、客户从哪里进",
+      "具体职级、城市与汇报线待确认，可以先聊"
+    ],
+    tags:["数据公司","销售","生态","大模型","基模","待确认"],
+    state:"live", stateNote:"在推进 · 职级待确认"
+  }
+];
+
+
+
+/* ---- 配置：联系方式（要改就改这里） ---- */
+const WECHAT = "18616247582";
+
+const TABS = [
+  {k:"all", n:"全部"},
+  {k:"capital", n:"资本市场"},
+  {k:"tech", n:"技术"},
+  {k:"biz", n:"职能"}
+];
+const CATNAME = {capital:"资本市场", tech:"技术", biz:"职能"};
+
+let tab = "all", q = "";
+
+const $ = s => document.querySelector(s);
+const esc = s => String(s==null?"":s).replace(/[&<>]/g, c=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[c]));
+
+function hl(text){
+  const t = esc(text);
+  if(!q) return t;
+  try{
+    const re = new RegExp("(" + q.replace(/[.*+?^${}()|[\]\\]/g,"\\$&") + ")","gi");
+    return t.replace(re, "<mark>$1</mark>");
+  }catch(e){ return t; }
+}
+
+function inTab(j){ return tab === "all" || j.cats.includes(tab); }
+function matches(j){
+  if(!q) return true;
+  const hay = [j.title, j.hook||"", j.org, j.intro||"", j.why, (j.reqs||[]).join(" "), (j.tags||[]).join(" "),
+               j.cats.map(c=>CATNAME[c]).join(" "), j.stateNote||""].join(" ").toLowerCase();
+  // 空格分词，全部命中才算匹配
+  return q.toLowerCase().split(/\s+/).filter(Boolean).every(w => hay.includes(w));
+}
+function countFor(k){
+  return JOBS.filter(j => (k==="all" || j.cats.includes(k)) && matches(j)).length;
+}
+
+function card(j){
+  const st = j.state === "live" ? "live" : "waiting";
+  return `<div class="card">
+    <div class="cardtop">
+      <div><span class="no">R-${j.no}</span></div>
+      <span class="cat ${j.cats[0]}">${j.mark}</span>
+    </div>
+    ${j.hook?`<div class="hook">${hl(j.hook)}</div>`:""}
+    <h3>${hl(j.title)}</h3>
+    <div class="org"><span class="lock">机构：</span>${hl(j.org)} <span class="lock">· 名称不公开</span></div>
+    ${j.intro?`<div class="intro"><span class="il">公司</span>${hl(j.intro)}</div>`:""}
+    <p class="why">${hl(j.why)}</p>
+    <ul class="reqs">${j.reqs.map(r=>`<li>${hl(r)}</li>`).join("")}</ul>
+    <div class="tags">${j.tags.map(t=>`<span class="tag">${hl(t)}</span>`).join("")}</div>
+    ${j.note?`<div class="inline-note" style="margin-bottom:14px">${esc(j.note)}</div>`:""}
+    <div class="foot">
+      <span class="state ${st}">${esc(j.stateNote)}</span>
+      <button class="act" data-no="${j.no}" data-title="${esc(j.title)}">我想了解</button>
+    </div>
+  </div>`;
+}
+
+function noticeFor(){
+  if(tab === "tech"){
+    return `<div class="inline-note">纯技术研发岗这条线我还在收，暂时没有能公开的信息。下面这条是技术背景往投资走的池子——如果你做技术、在看产业或投资方向的机会，也可以直接找我。</div>`;
+  }
+  return "";
+}
+
+function render(){
+  $("#tabs").innerHTML = TABS.map(t=>
+    `<button class="tab ${tab===t.k?"on":""}" data-tab="${t.k}">${t.n}<span class="n">${countFor(t.k)}</span></button>`
+  ).join("");
+
+  $("#notice").innerHTML = noticeFor();
+
+  // 技术 tab：把 tech 类也带上（第 04 条同时属于技术与资本市场）
+  const list = JOBS.filter(inTab).filter(matches);
+
+  $("#meta").innerHTML = q
+    ? `搜到 <b>${list.length}</b> 条 · 关键词「${esc(q)}」`
+    : `<b>${list.length}</b> 个岗位在招`;
+
+  $("#grid").innerHTML = list.length
+    ? list.map(card).join("")
+    : `<div class="empty"><b>这个条件下没有对得上的</b>换个词试试，或者直接找我聊——不公开的岗位比这里多。</div>`;
+
+  document.querySelectorAll("button.act").forEach(b=>{
+    b.onclick = () => {
+      const t = `你好，我在招聘信息站看到 R-${b.dataset.no}｜${b.dataset.title}，想了解一下这个岗位。`;
+      copy(t, b);
+    };
+  });
+}
+
+function copy(text, btn){
+  const done = () => {
+    if(btn){ const o = btn.textContent; btn.textContent = "已复制"; btn.classList.add("done");
+      setTimeout(()=>{ btn.textContent = o; btn.classList.remove("done"); }, 1600); }
+    toast("开场白已复制，贴给我就行");
+  };
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(text).then(done).catch(()=>fallback(text, done));
+  } else fallback(text, done);
+}
+function fallback(text, done){
+  const ta = document.createElement("textarea");
+  ta.value = text; ta.style.position="fixed"; ta.style.opacity="0";
+  document.body.appendChild(ta); ta.select();
+  try{ document.execCommand("copy"); }catch(e){}
+  document.body.removeChild(ta); done();
+}
+let tt;
+function toast(msg){
+  const el = $("#toast"); el.textContent = msg; el.classList.add("on");
+  clearTimeout(tt); tt = setTimeout(()=>el.classList.remove("on"), 2000);
+}
+
+$("#q").addEventListener("input", e=>{
+  q = e.target.value.trim();
+  $("#clear").style.display = q ? "block" : "none";
+  render();
+});
+$("#clear").onclick = ()=>{ $("#q").value=""; q=""; $("#clear").style.display="none"; render(); $("#q").focus(); };
+$("#tabs").addEventListener("click", e=>{
+  const b = e.target.closest("[data-tab]"); if(!b) return;
+  tab = b.dataset.tab; render();
+});
+$("#copywx").onclick = e => copy(WECHAT, e.currentTarget);
+
+render();
+
+</script>
+</body>
+</html>
