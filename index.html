@@ -135,9 +135,9 @@
   <header>
     <div class="kicker">在招岗位 · 内推</div>
     <h1>这里只放<em>正在推进</em>的岗位，<br>机构名不挂在墙上。</h1>
-    <p class="lede">我是猎头。这些岗位都是我在跑的，先把岗位说清楚，你判断合不合适——对上了我再告诉你是谁。</p>
+    <p class="lede">我是猎头。这里发的每个岗位都是<strong>确定需求、正在推进</strong>的，不是备选池。先把岗位说清楚，你判断合不合适——对上了我再告诉你是谁。</p>
     <div class="notice">
-      <b>机构名一律不公开。</b>很多机构还没对外说自己在招，说了对谁都不好。所以每张卡只写到「什么类型的机构、什么赛道、要什么人」这一层。
+      <b>机构名一律不公开。</b>很多机构还没对外说自己在招。所以每张卡只写到「什么类型的机构、什么赛道、要什么人」这一层。
     </div>
   </header>
 
@@ -232,21 +232,22 @@ const JOBS = [
       "有关键客户突破的经历"
     ],
     tags:["销售负责人","算力","硬科技","即将上市","团队管理"],
-    state:"waiting", stateNote:"画像确认中 · 产品与业绩目标待定"
+    state:"live", stateNote:"在推进"
   },
   {
     no:"05", cats:["capital","tech"], mark:"资本市场",
-    hook:"长期人才池 · 多家机构在看",
-    title:"技术／产品背景 → 投资", org:"头部投资机构与产业资本（多家）",
-    why:"这不是某一个岗位，是我在替几家机构长期看的一类人：做过技术或产品，想往投资走。不要求你已经是投资人。",
+    hook:"几家头部美元基金 · 确定需求在推进",
+    title:"技术／产品背景 → 投资", org:"多家头部美元基金",
+    why:"不是一个人在招，是几家头部美元基金都在看同一类人：做过技术或产品，想往投资走。这几家的需求是确定的，岗位只是还没公开写出来。",
     reqs:[
       "有理工科训练，真正做过技术研发或产品",
       "能把技术理解翻译成对公司、产品、行业机会的判断",
-      "对产业和商业有持续兴趣"
+      "对产业和商业有持续兴趣",
+      "不要求你已经是传统投资人"
     ],
-    tags:["技术转投资","产业资本","理工科","人才池"],
-    state:"waiting", stateNote:"人才池 · 具体 HC 待确认",
-    note:"没有哪家机构承诺了确定 HC。我是先建联，等岗位开了第一个找你。"
+    tags:["技术转投资","头部美元","理工科","确定需求"],
+    state:"live", stateNote:"在推进 · 具体哪几家私聊",
+    note:"具体是哪几家、什么职级，私信我单独说。都是头部美元，不是备选。"
   },
   {
     no:"06", cats:["capital"], mark:"资本市场",
@@ -309,32 +310,28 @@ const JOBS = [
     {
     no:"10", cats:["tech"], mark:"技术",
     hook:"深圳 · 消费级智能硬件 · 着急要人",
-    title:"硬件技术岗（方向待确认）", org:"消费级智能硬件公司（面向欧美市场）",
-    intro:"待补：公司规模与行业位置（品类排名 / 出货量 / 营收量级 / 融资或上市状态）",
-    why:"总部在深圳，产品主要卖欧美。客户那边的总监在催人，先看到合适的人，再谈具体怎么包装。",
+    title:"硬件技术岗", org:"消费级智能硬件公司（面向欧美市场）",
+        why:"总部在深圳，产品主要卖欧美。客户那边的总监在催人，先看到合适的人，再谈具体怎么包装。",
     reqs:[
       "最好是这几家的背景：库犸（Mammotion）、拓竹（Bambu Lab）等 maker 类公司",
       "或者 CNC／桌面级设备厂商出身，也合适",
-      "有消费级智能硬件、面向欧美市场的产品经验",
-      "具体技术方向与级别待确认，可以先聊背景"
+      "有消费级智能硬件、面向欧美市场的产品经验"
     ],
     tags:["深圳","消费级硬件","欧美市场","库犸","拓竹","CNC","maker"],
     state:"live", stateNote:"紧急 · 优先看人",
-    note:"这条是刚进来的需求，技术方向和级别我还在跟客户确认，确认后补在这里。先聊背景，合适我直接推过去。"
+    note:"客户那边在催人。先聊背景，合适我直接推过去。"
   },
   {
     no:"11", cats:["biz"], mark:"职能",
     hook:"头部数据公司 · 要基模圈做生态和销售的人",
-    title:"销售 / 生态（职级待确认）", org:"头部数据公司",
-    intro:"待补：公司规模、产品线与主要客户（你只说了「头部数据公司」）",
-    why:"这家公司在数据领域是头部。现在要找的人，来自基模公司——就是给大模型做生态、跑销售的那批人。",
+    title:"销售 / 生态合作", org:"头部数据公司",
+        why:"这家公司在数据领域是头部。现在要找的人，来自基模公司——就是给大模型做生态、跑销售的那批人。",
     reqs:[
       "在基模公司做过生态或销售：Seed（字节）、Qwen（阿里）、Kimi（月之暗面）、智谱、MiniMax 等",
-      "懂大模型公司的生态怎么搭、客户从哪里进",
-      "具体职级、城市与汇报线待确认，可以先聊"
+      "懂大模型公司的生态怎么搭、客户从哪里进"
     ],
-    tags:["数据公司","销售","生态","大模型","基模","待确认"],
-    state:"live", stateNote:"在推进 · 职级待确认"
+    tags:["数据公司","销售","生态","大模型","基模"],
+    state:"live", stateNote:"在推进"
   }
 ];
 
@@ -377,6 +374,9 @@ function countFor(k){
   return JOBS.filter(j => (k==="all" || j.cats.includes(k)) && matches(j)).length;
 }
 
+const INTERNAL = /待补|待确认|待定|TBD|未找到/;
+const pub = v => v && !INTERNAL.test(v) ? v : "";
+
 function card(j){
   const st = j.state === "live" ? "live" : "waiting";
   return `<div class="card">
@@ -387,11 +387,11 @@ function card(j){
     ${j.hook?`<div class="hook">${hl(j.hook)}</div>`:""}
     <h3>${hl(j.title)}</h3>
     <div class="org"><span class="lock">机构：</span>${hl(j.org)} <span class="lock">· 名称不公开</span></div>
-    ${j.intro?`<div class="intro"><span class="il">公司</span>${hl(j.intro)}</div>`:""}
+    ${pub(j.intro)?`<div class="intro"><span class="il">公司</span>${hl(j.intro)}</div>`:""}
     <p class="why">${hl(j.why)}</p>
-    <ul class="reqs">${j.reqs.map(r=>`<li>${hl(r)}</li>`).join("")}</ul>
+    <ul class="reqs">${j.reqs.filter(pub).map(r=>`<li>${hl(r)}</li>`).join("")}</ul>
     <div class="tags">${j.tags.map(t=>`<span class="tag">${hl(t)}</span>`).join("")}</div>
-    ${j.note?`<div class="inline-note" style="margin-bottom:14px">${esc(j.note)}</div>`:""}
+    ${pub(j.note)?`<div class="inline-note" style="margin-bottom:14px">${esc(j.note)}</div>`:""}
     <div class="foot">
       <span class="state ${st}">${esc(j.stateNote)}</span>
       <button class="act" data-no="${j.no}" data-title="${esc(j.title)}">我想了解</button>
